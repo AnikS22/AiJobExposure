@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
 export interface JobAnalysis {
   score: number;
@@ -8,13 +9,20 @@ export interface JobAnalysis {
   joke: string;
 }
 
+// Initialize OpenAI client conditionally to prevent build-time errors
+let openai: OpenAI | null = null;
+
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const perplexityApiKey = process.env.PERPLEXITY_API_KEY;
-    
-    if (!perplexityApiKey) {
+    if (!openai) {
       return NextResponse.json(
-        { error: 'Perplexity API key not configured' },
+        { error: 'OpenAI API key not configured' },
         { status: 500 }
       );
     }
@@ -28,66 +36,53 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = `Analyze the AI automation risk for the job title: "${job}"
+    const prompt = `You are a helpful but witty career AI assistant. Analyze the following job title: "${job}"
 
-Provide a JSON response with this exact format:
+Respond in JSON using this format:
 {
-  "score": [0-100 number indicating automation risk, where 0=very safe, 100=highly vulnerable],
+  "score": [0–100 score of how automatable it is],
   "rationale": "Explain this score in simple, everyday language. Focus on what makes this job hard or easy for AI to replace. Use plain English, not technical jargon.",
   "upskilling": "2-3 practical ideas for how this person can adapt, reskill, or upskill",
   "alternatives": "2 safer career pivots or more future-proof roles",
   "joke": "One-liner summary of their job's fate. Make it smart and funny."
 }
 
-Base your analysis on current research and real-world examples. Use recent data about AI automation trends.`;
+Make sure the JSON is clean and parseable.`;
 
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${perplexityApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'sonar',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful career AI assistant. Always respond with valid JSON. Be precise and research-backed in your analysis.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7,
-        top_p: 0.9,
-      }),
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful career AI assistant. Always respond with valid JSON.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+      max_tokens: 1000,
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      throw new Error(`Perplexity API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices[0]?.message?.content;
+    const response = completion.choices[0]?.message?.content;
     
-    if (!content) {
-      throw new Error('No response from Perplexity API');
+    if (!response) {
+      throw new Error('No response from OpenAI');
     }
 
     // Log the full response for debugging
-    console.log('Perplexity Response:', content);
+    console.log('OpenAI Response:', response);
 
     // Extract JSON from markdown code blocks if present
-    let jsonString = content;
-    if (content.includes('```json')) {
-      const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
+    let jsonString = response;
+    if (response.includes('```json')) {
+      const jsonMatch = response.match(/```json\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         jsonString = jsonMatch[1].trim();
       }
-    } else if (content.includes('```')) {
-      const jsonMatch = content.match(/```\s*([\s\S]*?)\s*```/);
+    } else if (response.includes('```')) {
+      const jsonMatch = response.match(/```\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         jsonString = jsonMatch[1].trim();
       }

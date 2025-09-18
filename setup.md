@@ -2,17 +2,17 @@
 
 ## 1. Environment Setup
 
-Create a `.env.local` file in the root directory with your Perplexity API key:
+Create a `.env.local` file in the root directory with your OpenAI API key:
 
 ```bash
-echo "PERPLEXITY_API_KEY=your-perplexity-api-key-here" > .env.local
+echo "OPENAI_API_KEY=sk-your-openai-api-key-here" > .env.local
 ```
 
-**Get your Perplexity API key:**
-1. Go to https://www.perplexity.ai/pplx-api
+**Get your OpenAI API key:**
+1. Go to https://platform.openai.com/api-keys
 2. Sign in or create an account
-3. Click "Generate API Key"
-4. Copy the key and replace `your-perplexity-api-key-here` in `.env.local`
+3. Click "Create new secret key"
+4. Copy the key and replace `sk-your-openai-api-key-here` in `.env.local`
 
 **🔒 Security Note:** The API key is now securely stored server-side only. No frontend exposure!
 

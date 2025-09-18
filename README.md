@@ -12,10 +12,10 @@ npm install
 ### 2. Set up Environment Variables
 Create a `.env.local` file in the root directory:
 ```bash
-PERPLEXITY_API_KEY=your-perplexity-api-key-here
+OPENAI_API_KEY=sk-your-openai-api-key-here
 ```
 
-Get your Perplexity API key from: https://www.perplexity.ai/pplx-api
+Get your OpenAI API key from: https://platform.openai.com/api-keys
 
 ### 3. Run Locally
 ```bash
@@ -37,13 +37,13 @@ git push origin main
 1. Go to [vercel.com](https://vercel.com)
 2. Click "New Project"
 3. Import your GitHub repository
-4. Add environment variable: `PERPLEXITY_API_KEY`
+4. Add environment variable: `OPENAI_API_KEY`
 5. Deploy!
 
 ## 🎯 Features
 
-- **AI-Powered Analysis**: Uses Perplexity API for research-backed job vulnerability analysis
-- **Secure API**: Server-side Perplexity integration (no frontend key exposure)
+- **AI-Powered Analysis**: Uses GPT-4o to analyze job vulnerability
+- **Secure API**: Server-side OpenAI integration (no frontend key exposure)
 - **Enhanced Web Search**: Multi-query DuckDuckGo search with snippets and quality filtering
 - **Beautiful UI**: Responsive design with Tailwind CSS
 - **Smart Scoring**: 0-100 vulnerability score with color-coded results and humor
@@ -56,7 +56,7 @@ git push origin main
 - **Next.js 14** with App Router
 - **TypeScript** for type safety
 - **Tailwind CSS** for styling
-- **Perplexity API** for research-backed AI analysis
+- **OpenAI SDK** for AI analysis
 - **Vercel** for deployment
 
 ## 📁 Project Structure
