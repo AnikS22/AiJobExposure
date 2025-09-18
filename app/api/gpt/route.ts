@@ -64,8 +64,22 @@ Make sure the JSON is clean and parseable.`;
     // Log the full response for debugging
     console.log('OpenAI Response:', response);
 
+    // Extract JSON from markdown code blocks if present
+    let jsonString = response;
+    if (response.includes('```json')) {
+      const jsonMatch = response.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonString = jsonMatch[1].trim();
+      }
+    } else if (response.includes('```')) {
+      const jsonMatch = response.match(/```\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonString = jsonMatch[1].trim();
+      }
+    }
+
     // Parse the JSON response
-    const analysis = JSON.parse(response) as JobAnalysis;
+    const analysis = JSON.parse(jsonString) as JobAnalysis;
     
     // Validate the response structure
     if (typeof analysis.score !== 'number' || 
