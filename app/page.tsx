@@ -69,9 +69,9 @@ export default function Home() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score <= 40) return 'text-blue-600 bg-blue-100 border-blue-200';
-    if (score <= 70) return 'text-yellow-600 bg-yellow-100 border-yellow-200';
-    return 'text-red-600 bg-red-100 border-red-200';
+    if (score <= 40) return 'text-blue-900 bg-blue-100 border-blue-200';
+    if (score <= 70) return 'text-yellow-900 bg-yellow-100 border-yellow-200';
+    return 'text-red-900 bg-red-100 border-red-200';
   };
 
   const getScoreEmoji = (score: number) => {

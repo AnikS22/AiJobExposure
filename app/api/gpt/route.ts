@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
 Respond in JSON using this format:
 {
 "score": [0–100 score of how automatable it is],
-"rationale": "Why this score makes sense — based on task repetition, creativity, etc.",
-"upskilling": "2-3 quick ideas for how this person can adapt, reskill, or upskill",
+"rationale": "Explain this score in simple, everyday language. Focus on what makes this job hard or easy for AI to replace. Use plain English, not technical jargon.",
+"upskilling": "2-3 practical ideas for how this person can adapt, reskill, or upskill",
 "alternatives": "2 safer career pivots or more future-proof roles",
 "joke": "One-liner summary of their job's fate. Make it smart and funny."
 }
