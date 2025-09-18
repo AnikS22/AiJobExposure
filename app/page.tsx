@@ -124,7 +124,7 @@ export default function Home() {
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
                 placeholder="e.g., Software Engineer, Teacher, Lawyer..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg text-gray-900 bg-white placeholder-gray-500"
                 disabled={loading}
               />
             </div>
