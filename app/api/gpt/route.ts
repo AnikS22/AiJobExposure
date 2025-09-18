@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
+export interface SearchResult {
+  title: string;
+  url: string;
+  snippet?: string;
+  source?: string;
+  relevanceScore?: number;
+}
+
 export interface JobAnalysis {
   score: number;
   rationale: string;
@@ -27,7 +35,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { job } = await request.json();
+    const { job, searchResults = [] } = await request.json();
     
     if (!job || typeof job !== 'string') {
       return NextResponse.json(
@@ -36,14 +44,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = `You are a helpful but witty career AI assistant. Analyze the following job title: "${job}"
+    // Build search results context
+    const searchContext = searchResults.length > 0 
+      ? `\n\nBased on the following research findings:\n${searchResults.map((result: SearchResult, index: number) => 
+          `${index + 1}. ${result.title} (${result.source || 'Unknown'})\n   ${result.snippet || 'No snippet available'}\n   URL: ${result.url}\n`
+        ).join('\n')}`
+      : '\n\nNote: No specific research data was found for this job. Base your analysis on general AI automation trends.';
+
+    const prompt = `You are a helpful but witty career AI assistant. Analyze the following job title: "${job}"${searchContext}
+
+IMPORTANT: Use the research findings above to inform your analysis. If specific studies, reports, or data are mentioned, reference them in your rationale. If no research is available, use general AI automation knowledge.
 
 Respond in JSON using this format:
 {
-  "score": [0–100 score of how automatable it is],
-  "rationale": "Explain this score in simple, everyday language. Focus on what makes this job hard or easy for AI to replace. Use plain English, not technical jargon.",
-  "upskilling": "2-3 practical ideas for how this person can adapt, reskill, or upskill",
-  "alternatives": "2 safer career pivots or more future-proof roles",
+  "score": [0–100 score of how automatable it is, based on the research findings],
+  "rationale": "Explain this score in simple, everyday language. Reference specific research findings when available. Focus on what makes this job hard or easy for AI to replace. Use plain English, not technical jargon.",
+  "upskilling": "2-3 practical ideas for how this person can adapt, reskill, or upskill based on current research",
+  "alternatives": "2 safer career pivots or more future-proof roles based on the research",
   "joke": "One-liner summary of their job's fate. Make it smart and funny."
 }
 

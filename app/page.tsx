@@ -37,19 +37,28 @@ export default function Home() {
     setSearchResults([]);
 
     try {
-      // Call both APIs in parallel
-      const [gptResponse, searchResponse] = await Promise.all([
-        fetch('/api/gpt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ job: jobTitle.trim() }),
+      // First, get search results
+      const searchResponse = await fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job: jobTitle.trim() }),
+      });
+
+      let searchData = null;
+      if (searchResponse.ok) {
+        searchData = await searchResponse.json();
+        setSearchResults(searchData.searchResults || searchData.results || []);
+      }
+
+      // Then, use search results to inform AI analysis
+      const gptResponse = await fetch('/api/gpt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          job: jobTitle.trim(),
+          searchResults: searchData?.searchResults || searchData?.results || []
         }),
-        fetch('/api/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ job: jobTitle.trim() }),
-        }),
-      ]);
+      });
 
       if (!gptResponse.ok) {
         throw new Error('Failed to analyze job');
@@ -57,11 +66,6 @@ export default function Home() {
 
       const analysisData = await gptResponse.json();
       setAnalysis(analysisData);
-
-      if (searchResponse.ok) {
-        const searchData = await searchResponse.json();
-        setSearchResults(searchData.searchResults || searchData.results || []);
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
