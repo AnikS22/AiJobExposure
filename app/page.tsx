@@ -14,6 +14,8 @@ interface SearchResult {
   title: string;
   url: string;
   snippet?: string;
+  source?: string;
+  relevanceScore?: number;
 }
 
 export default function Home() {
@@ -58,7 +60,7 @@ export default function Home() {
 
       if (searchResponse.ok) {
         const searchData = await searchResponse.json();
-        setSearchResults(searchData.results || []);
+        setSearchResults(searchData.searchResults || searchData.results || []);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -214,11 +216,25 @@ export default function Home() {
                       rel="noopener noreferrer"
                       className="block p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 border-l-4 border-purple-500"
                     >
-                      <h4 className="font-semibold text-gray-900 mb-2">{result.title}</h4>
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-semibold text-gray-900 flex-1">{result.title}</h4>
+                        {result.source && (
+                          <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                            {result.source}
+                          </span>
+                        )}
+                      </div>
                       {result.snippet && (
                         <p className="text-sm text-gray-600 mb-2 line-clamp-2">{result.snippet}</p>
                       )}
-                      <p className="text-xs text-gray-500 truncate">{result.url}</p>
+                      <div className="flex justify-between items-center">
+                        <p className="text-xs text-gray-500 truncate flex-1">{result.url}</p>
+                        {result.relevanceScore && (
+                          <span className="ml-2 text-xs text-gray-400">
+                            Score: {result.relevanceScore.toFixed(1)}
+                          </span>
+                        )}
+                      </div>
                     </a>
                   ))}
                 </div>
