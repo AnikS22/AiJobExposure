@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import DoomBlasterGame from '../components/DoomBlasterGame';
 
 interface JobAnalysis {
   score: number;
@@ -26,7 +25,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState('');
-  const [progress, setProgress] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +35,6 @@ export default function Home() {
     setError('');
     setAnalysis(null);
     setSearchResults([]);
-    setProgress(0);
 
     try {
       // First, get search results
@@ -51,7 +48,6 @@ export default function Home() {
       if (searchResponse.ok) {
         searchData = await searchResponse.json();
         setSearchResults(searchData.searchResults || searchData.results || []);
-        setProgress(50); // Search complete
       }
 
       // Then, use search results to inform AI analysis
@@ -70,7 +66,6 @@ export default function Home() {
 
       const analysisData = await gptResponse.json();
       setAnalysis(analysisData);
-      setProgress(100); // Analysis complete
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -129,7 +124,7 @@ export default function Home() {
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
                 placeholder="e.g., Software Engineer, Teacher, Lawyer..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg text-gray-900 bg-white placeholder-gray-500"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg"
                 disabled={loading}
               />
             </div>
@@ -143,15 +138,12 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Loading State - Doom Blaster Game */}
+        {/* Loading State */}
         {loading && (
-          <DoomBlasterGame 
-            jobTitle={jobTitle}
-            progress={progress}
-            onGameEnd={() => {
-              // Game ends when analysis completes
-            }}
-          />
+          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600">Consulting the robots...</p>
+          </div>
         )}
 
         {/* Error State */}
@@ -215,15 +207,8 @@ export default function Home() {
               </h3>
               {searchLoading ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-                    <div className="flex space-x-1">
-                      <span className="text-2xl animate-bounce">🔍</span>
-                      <span className="text-2xl animate-bounce" style={{animationDelay: '0.1s'}}>📊</span>
-                      <span className="text-2xl animate-bounce" style={{animationDelay: '0.2s'}}>🤖</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 ml-4">Hunting for AI research data...</p>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mr-3"></div>
+                  <p className="text-gray-600">Searching for real-world data...</p>
                 </div>
               ) : searchResults.length > 0 ? (
                 <div className="space-y-4">
@@ -231,8 +216,8 @@ export default function Home() {
                     <a
                       key={index}
                       href={result.url}
-          target="_blank"
-          rel="noopener noreferrer"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 border-l-4 border-purple-500"
                     >
                       <div className="flex justify-between items-start mb-2">
