@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import DoomBlasterGame from '../components/DoomBlasterGame';
 
 interface JobAnalysis {
   score: number;
@@ -25,6 +26,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState('');
+  const [progress, setProgress] = useState(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +37,7 @@ export default function Home() {
     setError('');
     setAnalysis(null);
     setSearchResults([]);
+    setProgress(0);
 
     try {
       // First, get search results
@@ -48,6 +51,7 @@ export default function Home() {
       if (searchResponse.ok) {
         searchData = await searchResponse.json();
         setSearchResults(searchData.searchResults || searchData.results || []);
+        setProgress(50); // Search complete
       }
 
       // Then, use search results to inform AI analysis
@@ -66,6 +70,7 @@ export default function Home() {
 
       const analysisData = await gptResponse.json();
       setAnalysis(analysisData);
+      setProgress(100); // Analysis complete
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -138,80 +143,15 @@ export default function Home() {
           </form>
         </div>
 
-        {/* Loading State - AI Job Doom Game */}
+        {/* Loading State - Doom Blaster Game */}
         {loading && (
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">🤖 AI Job Doom Game</h3>
-              <p className="text-gray-600">Survive the AI takeover while we analyze your job...</p>
-            </div>
-            
-            {/* Game Canvas */}
-            <div className="relative bg-gradient-to-b from-blue-100 to-green-100 rounded-lg h-32 overflow-hidden border-2 border-gray-300" style={{
-              background: 'linear-gradient(45deg, #e0f2fe 0%, #f0fdf4 50%, #fef3c7 100%)',
-              backgroundSize: '400% 400%',
-              animation: 'gradientShift 3s ease infinite'
-            }}>
-              {/* Ground */}
-              <div className="absolute bottom-0 w-full h-4 bg-green-500"></div>
-              
-              {/* Human Character */}
-              <div className="absolute bottom-4 left-4 text-2xl" style={{
-                animation: 'humanRun 1s ease-in-out infinite'
-              }}>
-                🏃‍♂️
-              </div>
-              
-              {/* AI Robot Obstacles */}
-              <div className="absolute bottom-4 right-8 text-2xl" style={{
-                animation: 'robotChase 2s linear infinite'
-              }}>
-                🤖
-              </div>
-              <div className="absolute bottom-4 right-16 text-2xl" style={{
-                animation: 'robotChase 2s linear infinite',
-                animationDelay: '0.5s'
-              }}>
-                🤖
-              </div>
-              <div className="absolute bottom-4 right-24 text-2xl" style={{
-                animation: 'robotChase 2s linear infinite',
-                animationDelay: '1s'
-              }}>
-                🤖
-              </div>
-              
-              {/* Floating AI Text */}
-              <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-sm font-bold text-red-600 animate-pulse">
-                AI TAKEOVER IN PROGRESS...
-              </div>
-              
-              {/* Floating Job Elements */}
-              <div className="absolute top-6 left-8 text-lg animate-bounce" style={{animationDelay: '0.3s'}}>
-                💼
-              </div>
-              <div className="absolute top-8 right-12 text-lg animate-bounce" style={{animationDelay: '0.7s'}}>
-                📊
-              </div>
-              <div className="absolute top-10 left-1/2 text-lg animate-bounce" style={{animationDelay: '1.1s'}}>
-                🎯
-              </div>
-              
-              {/* Progress Bar */}
-              <div className="absolute top-8 left-4 right-4">
-                <div className="bg-gray-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-500 to-red-500 h-2 rounded-full animate-pulse" style={{width: '60%'}}></div>
-                </div>
-                <p className="text-xs text-gray-600 mt-1 text-center">Job Analysis Progress</p>
-              </div>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-500">
-                💡 Tip: The more robots you see, the higher your job&apos;s AI risk!
-              </p>
-            </div>
-          </div>
+          <DoomBlasterGame 
+            jobTitle={jobTitle}
+            progress={progress}
+            onGameEnd={() => {
+              // Game ends when analysis completes
+            }}
+          />
         )}
 
         {/* Error State */}
