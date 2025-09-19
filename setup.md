@@ -1,62 +1,157 @@
-# 🚀 Quick Setup Guide
+# 🚀 AI Job Doom Meter - Complete Setup Guide
 
-## 1. Environment Setup
+## ✅ Current Status
+- ✅ Next.js 15.5.3 with Turbopack
+- ✅ Development server running on http://localhost:3001
+- ✅ All dependencies installed
+- ✅ Build process working
+- ✅ Search-informed AI analysis implemented
 
-Create a `.env.local` file in the root directory with your OpenAI API key:
+## 🔑 Environment Setup
+
+### 1. OpenAI API Key Setup
+You need to set up your OpenAI API key in the `.env.local` file:
 
 ```bash
-echo "OPENAI_API_KEY=sk-your-openai-api-key-here" > .env.local
+# Edit the .env.local file
+OPENAI_API_KEY=sk-your-actual-openai-api-key-here
 ```
 
-**Get your OpenAI API key:**
+**To get your OpenAI API key:**
 1. Go to https://platform.openai.com/api-keys
-2. Sign in or create an account
+2. Sign in to your OpenAI account
 3. Click "Create new secret key"
-4. Copy the key and replace `sk-your-openai-api-key-here` in `.env.local`
+4. Copy the key and replace `your_openai_api_key_here` in `.env.local`
 
-**🔒 Security Note:** The API key is now securely stored server-side only. No frontend exposure!
+### 2. Test the Application
+1. Open http://localhost:3001 in your browser
+2. Enter a job title (e.g., "Software Engineer", "Teacher", "Lawyer")
+3. Click "Analyze My Job"
+4. The app will:
+   - Search multiple sources for real research data
+   - Use that data to inform AI analysis
+   - Provide evidence-based vulnerability score
 
-## 2. Install & Run
+## 🌐 Deployment to Vercel
 
+### 1. Push to GitHub
 ```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
+git add .
+git commit -m "Ready for deployment"
+git push origin main
 ```
 
-Open http://localhost:3000 in your browser.
+### 2. Deploy to Vercel
+1. Go to https://vercel.com
+2. Import your GitHub repository
+3. Add environment variable:
+   - Key: `OPENAI_API_KEY`
+   - Value: Your actual OpenAI API key
+4. Deploy!
 
-## 3. Deploy to Vercel
+## 🎯 Features
 
-1. **Push to GitHub:**
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
+### Core Functionality
+- **Multi-Engine Search**: Searches DuckDuckGo, Brave, Bing, Google Scholar, and specialized sources
+- **Search-Informed AI**: AI analysis is based on real research data
+- **Evidence-Based Scoring**: Vulnerability scores backed by actual studies
+- **Comprehensive Results**: Score, rationale, upskilling, alternatives, and humor
 
-2. **Connect to Vercel:**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import your GitHub repository
-   - Add environment variable: `OPENAI_API_KEY` with your API key
-   - Deploy!
+### UI Features
+- **Responsive Design**: Works on all devices
+- **Loading States**: Engaging loading animations
+- **Color-Coded Scores**: Visual indicators for vulnerability levels
+- **Source Links**: Real research sources with relevance scores
+- **Error Handling**: Graceful error messages
 
-## 🎯 Test the App
+### Technical Features
+- **Server-Side API Keys**: Secure OpenAI integration
+- **Parallel Processing**: Fast search across multiple engines
+- **Content Extraction**: Extracts full article content for analysis
+- **Relevance Scoring**: Ranks results by credibility and relevance
+- **Fault Tolerance**: Continues working even if some sources fail
 
-Try these job titles to see the AI analysis in action:
-- "Software Engineer"
-- "Teacher"
-- "Paralegal"
-- "Data Analyst"
-- "Customer Service Representative"
+## 🔧 Development Commands
 
-## 🛠️ Troubleshooting
+```bash
+# Start development server
+npm run dev
 
-**Build fails?** Make sure you have the `.env.local` file with a valid OpenAI API key.
+# Build for production
+npm run build
 
-**API errors?** Check that your OpenAI API key is valid and has credits.
+# Start production server
+npm start
 
-**Styling issues?** Run `npm install` to ensure all dependencies are installed.
+# Run linting
+npm run lint
+```
+
+## 📁 Project Structure
+
+```
+/app
+├── page.tsx              # Main UI component
+├── layout.tsx            # App layout with metadata
+├── globals.css           # Global styles
+└── api/
+    ├── gpt/route.ts      # OpenAI integration
+    └── search/route.ts   # Multi-engine search
+/lib/                     # Utility functions
+/public/                  # Static assets
+```
+
+## 🎨 Customization
+
+### Styling
+- Uses Tailwind CSS for styling
+- Custom gradient backgrounds
+- Responsive design patterns
+- Color-coded score indicators
+
+### AI Prompt
+- Located in `/app/api/gpt/route.ts`
+- Customizable prompt for different analysis styles
+- Research-informed analysis
+- JSON response format
+
+### Search Sources
+- Located in `/app/api/search/route.ts`
+- Add new search engines
+- Modify relevance scoring
+- Customize content extraction
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+1. **"OpenAI API key not configured"**
+   - Check `.env.local` file exists
+   - Verify API key is correct
+   - Restart development server
+
+2. **Search results not loading**
+   - Check internet connection
+   - Some search engines may be temporarily unavailable
+   - App includes fallback sources
+
+3. **Build errors**
+   - Run `npm install` to ensure dependencies
+   - Check for TypeScript errors
+   - Verify all imports are correct
+
+### Debug Mode
+- Check browser console for errors
+- Check terminal for server logs
+- API responses are logged for debugging
+
+## 🎉 Ready to Use!
+
+Your AI Job Doom Meter is now fully set up and ready to:
+- Analyze job vulnerability to AI
+- Provide evidence-based insights
+- Suggest upskilling opportunities
+- Recommend alternative career paths
+- Deliver witty, research-backed analysis
+
+Just add your OpenAI API key and you're good to go! 🚀

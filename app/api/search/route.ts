@@ -253,7 +253,7 @@ class MultiEngineSearch {
       return content
         .replace(/\s+/g, ' ')
         .substring(0, 2000);
-    } catch (error) {
+    } catch {
       return '';
     }
   }
