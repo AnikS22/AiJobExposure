@@ -8,6 +8,18 @@ interface JobAnalysis {
   upskilling: string;
   alternatives: string;
   joke: string;
+  aiResistanceScore?: number;
+  futureProofingPlaybook?: string[];
+  skillGapAnalysis?: {
+    missingSkills: string[];
+    emergingSkills: string[];
+    humanSkills: string[];
+  };
+  careerPivotSimulator?: {
+    saferRoles: string[];
+    transitionDifficulty: string;
+    pivotPath: string[];
+  };
 }
 
 interface SearchResult {
@@ -236,7 +248,133 @@ export default function Home() {
               <p className="text-lg text-slate-300 leading-relaxed font-light">{analysis.alternatives}</p>
             </div>
 
-            {/* Joke */}
+            {/* AI Resistance Score */}
+            {analysis.aiResistanceScore && (
+              <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-3xl p-12">
+                <h3 className="text-3xl font-light text-white mb-8">
+                  AI Resistance Score
+                </h3>
+                <div className="text-center mb-6">
+                  <div className="text-6xl font-light text-blue-300 mb-4">{analysis.aiResistanceScore}</div>
+                  <p className="text-lg text-blue-200">
+                    How "human" your job really is
+                  </p>
+                </div>
+                <p className="text-slate-300 text-center">
+                  {analysis.aiResistanceScore >= 70 ? "Highly human - AI can't replace your unique skills" : 
+                   analysis.aiResistanceScore >= 40 ? "Moderately human - Some skills are irreplaceable" : 
+                   "Low human factor - Focus on developing unique human skills"}
+                </p>
+              </div>
+            )}
+
+            {/* Future-Proofing Playbook */}
+            {analysis.futureProofingPlaybook && analysis.futureProofingPlaybook.length > 0 && (
+              <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-3xl p-12">
+                <h3 className="text-3xl font-light text-white mb-8">
+                  Future-Proofing Playbook
+                </h3>
+                <div className="space-y-4">
+                  {analysis.futureProofingPlaybook.map((step, index) => (
+                    <div key={index} className="flex items-start space-x-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center text-emerald-300 font-medium text-sm">
+                        {index + 1}
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Skill Gap Analysis */}
+            {analysis.skillGapAnalysis && (
+              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-3xl p-12">
+                <h3 className="text-3xl font-light text-white mb-8">
+                  Skill Gap Analysis
+                </h3>
+                <div className="grid md:grid-cols-3 gap-8">
+                  <div>
+                    <h4 className="text-xl font-medium text-purple-300 mb-4">Missing Skills</h4>
+                    <ul className="space-y-2">
+                      {analysis.skillGapAnalysis.missingSkills.map((skill, index) => (
+                        <li key={index} className="text-slate-300 flex items-center">
+                          <span className="w-2 h-2 bg-red-400 rounded-full mr-3"></span>
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-medium text-purple-300 mb-4">Emerging Skills</h4>
+                    <ul className="space-y-2">
+                      {analysis.skillGapAnalysis.emergingSkills.map((skill, index) => (
+                        <li key={index} className="text-slate-300 flex items-center">
+                          <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-medium text-purple-300 mb-4">Human Skills</h4>
+                    <ul className="space-y-2">
+                      {analysis.skillGapAnalysis.humanSkills.map((skill, index) => (
+                        <li key={index} className="text-slate-300 flex items-center">
+                          <span className="w-2 h-2 bg-green-400 rounded-full mr-3"></span>
+                          {skill}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Career Pivot Simulator */}
+            {analysis.careerPivotSimulator && (
+              <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-3xl p-12">
+                <h3 className="text-3xl font-light text-white mb-8">
+                  Career Pivot Simulator
+                </h3>
+                <div className="mb-6">
+                  <h4 className="text-xl font-medium text-orange-300 mb-4">Safer Roles for You</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {analysis.careerPivotSimulator.saferRoles.map((role, index) => (
+                      <span key={index} className="px-4 py-2 bg-orange-500/20 border border-orange-500/30 rounded-full text-orange-200 text-sm">
+                        {role}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="mb-6">
+                  <h4 className="text-xl font-medium text-orange-300 mb-4">Transition Difficulty: 
+                    <span className={`ml-2 px-3 py-1 rounded-full text-sm ${
+                      analysis.careerPivotSimulator.transitionDifficulty === 'Easy' ? 'bg-green-500/20 text-green-300' :
+                      analysis.careerPivotSimulator.transitionDifficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-300' :
+                      'bg-red-500/20 text-red-300'
+                    }`}>
+                      {analysis.careerPivotSimulator.transitionDifficulty}
+                    </span>
+                  </h4>
+                </div>
+                <div>
+                  <h4 className="text-xl font-medium text-orange-300 mb-4">Your Pivot Path</h4>
+                  <div className="space-y-3">
+                    {analysis.careerPivotSimulator.pivotPath.map((step, index) => (
+                      <div key={index} className="flex items-start space-x-4">
+                        <div className="flex-shrink-0 w-8 h-8 bg-orange-500/20 border border-orange-500/30 rounded-full flex items-center justify-center text-orange-300 font-medium text-sm">
+                          {index + 1}
+                        </div>
+                        <p className="text-slate-300 leading-relaxed">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Reality Check */}
             <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-3xl p-12">
               <h3 className="text-3xl font-light text-white mb-8">
                 Reality Check

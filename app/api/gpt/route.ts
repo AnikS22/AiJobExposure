@@ -15,6 +15,18 @@ export interface JobAnalysis {
   upskilling: string;
   alternatives: string;
   joke: string;
+  aiResistanceScore?: number;
+  futureProofingPlaybook?: string[];
+  skillGapAnalysis?: {
+    missingSkills: string[];
+    emergingSkills: string[];
+    humanSkills: string[];
+  };
+  careerPivotSimulator?: {
+    saferRoles: string[];
+    transitionDifficulty: string;
+    pivotPath: string[];
+  };
 }
 
 // Initialize OpenAI client conditionally to prevent build-time errors
@@ -59,9 +71,25 @@ Respond in JSON using this format:
 {
   "score": [0–100 score of how automatable it is, based on the research findings],
   "rationale": "Explain this score in simple, everyday language. Reference specific research findings when available. Focus on what makes this job hard or easy for AI to replace. Use plain English, not technical jargon.",
-  "upskilling": "2-3 practical ideas for how this person can adapt, reskill, or upskill based on current research",
+  "upskilling": "2-3 practical ideas for how this person can adapt, reskill, or upskill based on current research. Include both technical skills (like learning AI tools, data analysis) and soft skills (like emotional intelligence, creativity, leadership).",
   "alternatives": "2 safer career pivots or more future-proof roles based on the research",
-  "joke": "One-liner summary of their job's fate. Make it smart and funny."
+  "joke": "One-liner summary of their job's fate. Make it smart and funny.",
+  "aiResistanceScore": [0-100 score of how "human" this job really is - higher means more human skills required],
+  "futureProofingPlaybook": [
+    "Step 1: [Specific actionable step based on research]",
+    "Step 2: [Next concrete action]",
+    "Step 3: [Final step to future-proof]"
+  ],
+  "skillGapAnalysis": {
+    "missingSkills": ["List 2-3 technical skills they need to learn"],
+    "emergingSkills": ["List 2-3 new skills coming to their field"],
+    "humanSkills": ["List 2-3 irreplaceable human skills to develop"]
+  },
+  "careerPivotSimulator": {
+    "saferRoles": ["List 2-3 roles that would be safer for this person"],
+    "transitionDifficulty": "Easy/Medium/Hard based on their current skills",
+    "pivotPath": ["Step 1 of transition", "Step 2 of transition", "Step 3 of transition"]
+  }
 }
 
 Make sure the JSON is clean and parseable.`;
