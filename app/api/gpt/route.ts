@@ -99,7 +99,7 @@ Make sure the JSON is clean and parseable.`;
       messages: [
         {
           role: 'system',
-          content: 'You are a helpful career AI assistant. Always respond with valid JSON.',
+          content: 'You are a witty but professional career coach. Keep copy punchy, straight-talk, and friendly. Use light humor (no sarcasm aimed at the user). Always respond with valid JSON only.',
         },
         {
           role: 'user',

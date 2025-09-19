@@ -105,9 +105,9 @@ export default function Home() {
   };
 
   const getScoreMessage = (score: number) => {
-    if (score <= 40) return 'Your role appears relatively secure from AI automation';
-    if (score <= 70) return 'Consider upskilling to adapt to changing technology';
-    return 'Significant automation risk detected';
+    if (score <= 40) return 'You\'re in the comfy zone. Keep being gloriously human.';
+    if (score <= 70) return 'Borderline toast. Add new skills before the toaster dings.';
+    return 'Hot bread. Pivot, upskill, or manage the robots.';
   };
 
   return (
@@ -134,8 +134,8 @@ export default function Home() {
           </h1>
           
           <p className="text-xl text-slate-300 font-light max-w-3xl mx-auto leading-relaxed mb-12">
-            Discover your job&apos;s vulnerability to AI automation with research-backed insights. 
-            Get personalized recommendations for staying ahead of the curve.
+            We&apos;ll ask the robots, check the research, and tell you—plainly—if your job is safe, sizzling, or already toast. 
+            Then we hand you a no‑nonsense plan to stay one step ahead.
           </p>
 
           {/* Decorative Arrows */}
@@ -159,7 +159,7 @@ export default function Home() {
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold rounded-2xl transition-all duration-300 text-lg shadow-lg hover:shadow-emerald-500/25"
           >
             <span className="mr-2">🧠</span>
-            Find Your Vulnerability
+            Take me to the quiz
             <span className="ml-2">→</span>
           </button>
         </div>
@@ -188,7 +188,7 @@ export default function Home() {
               disabled={loading || !jobTitle.trim()}
               className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-4 px-8 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-lg shadow-lg hover:shadow-emerald-500/25"
             >
-              {loading ? 'Analyzing Your Vulnerability...' : 'Analyze My Job'}
+              {loading ? 'Consulting the robots…' : 'Find my vulnerability'}
             </button>
           </form>
         </div>
@@ -197,8 +197,8 @@ export default function Home() {
         {loading && (
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-12 text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-2 border-white/20 border-t-white mx-auto mb-6"></div>
-            <p className="text-xl text-white font-light">Analyzing job vulnerability...</p>
-            <p className="text-slate-400 mt-2">Gathering research data and generating insights</p>
+            <p className="text-xl text-white font-light">Consulting the robots… please hold your existential dread.</p>
+            <p className="text-slate-400 mt-2">Scraping studies, bribing algorithms with math, and preparing plain‑English results</p>
           </div>
         )}
 
