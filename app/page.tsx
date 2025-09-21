@@ -197,7 +197,7 @@ export default function Home() {
         {loading && (
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-12 text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-2 border-white/20 border-t-white mx-auto mb-6"></div>
-            <p className="text-xl text-white font-light">Consulting the robots… please hold your existential dread.</p>
+            <p className="text-xl text-white font-light">Consulting the robots…</p>
             <p className="text-slate-400 mt-2">Scraping studies, bribing algorithms with math, and preparing plain‑English results</p>
           </div>
         )}
