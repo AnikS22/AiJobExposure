@@ -257,7 +257,7 @@ export default function Home() {
                 <div className="text-center mb-6">
                   <div className="text-6xl font-light text-blue-300 mb-4">{analysis.aiResistanceScore}</div>
                   <p className="text-lg text-blue-200">
-                    How "human" your job really is
+                    How &quot;human&quot; your job really is
                   </p>
                 </div>
                 <p className="text-slate-300 text-center">
