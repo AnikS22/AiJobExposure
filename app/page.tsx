@@ -60,6 +60,9 @@ export default function Home() {
       if (searchResponse.ok) {
         searchData = await searchResponse.json();
         setSearchResults(searchData.searchResults || searchData.results || []);
+      } else {
+        // If search fails, inform the user but proceed with GPT analysis
+        setError('Could not fetch research data. Analysis will be based on general knowledge.');
       }
 
       // Then, use search results to inform AI analysis
