@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
+import type { CheerioAPI } from 'cheerio';
 
 export interface SearchResult {
   title: string;
@@ -43,7 +44,7 @@ class MultiEngineSearch {
       });
 
       const html = await response.text();
-      const $ = cheerio.load(html);
+      const $: CheerioAPI = cheerio.load(html);
       const results: SearchResult[] = [];
 
       $('.result').each((i, el) => {
@@ -113,7 +114,7 @@ class MultiEngineSearch {
       });
 
       const html = await response.text();
-      const $ = cheerio.load(html);
+      const $: CheerioAPI = cheerio.load(html);
       const results: SearchResult[] = [];
 
       $('[data-type="web"]').each((i, el) => {
@@ -149,7 +150,7 @@ class MultiEngineSearch {
       });
 
       const html = await response.text();
-      const $ = cheerio.load(html);
+      const $: CheerioAPI = cheerio.load(html);
       const results: SearchResult[] = [];
 
       $('.gs_ri').each((i, el) => {
@@ -186,7 +187,7 @@ class MultiEngineSearch {
       });
 
       const html = await response.text();
-      const $ = cheerio.load(html);
+      const $: CheerioAPI = cheerio.load(html);
       const results: SearchResult[] = [];
 
       $('.b_algo').each((i, el) => {
@@ -223,7 +224,7 @@ class MultiEngineSearch {
       });
 
       const html = await response.text();
-      const $ = cheerio.load(html);
+      const $: CheerioAPI = cheerio.load(html);
 
       $('script, style').remove();
 
@@ -373,7 +374,7 @@ class JobReplacementAnalyzer {
       `"${job}" augmentation vs replacement AI`
     ];
 
-    const searchPromises = [];
+    const searchPromises: Array<Promise<SearchResult[]>> = [];
 
     for (const query of queries) {
       searchPromises.push(
