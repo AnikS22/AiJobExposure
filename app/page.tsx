@@ -60,6 +60,9 @@ export default function Home() {
       if (searchResponse.ok) {
         searchData = await searchResponse.json();
         setSearchResults(searchData.searchResults || searchData.results || []);
+      } else {
+        // Log search errors but don't fail the whole request
+        console.warn('Search API returned error:', searchResponse.status);
       }
 
       // Then, use search results to inform AI analysis
@@ -73,10 +76,18 @@ export default function Home() {
       });
 
       if (!gptResponse.ok) {
-        throw new Error('Failed to analyze job');
+        // Try to extract error message from response
+        const errorData = await gptResponse.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to analyze job');
       }
 
       const analysisData = await gptResponse.json();
+      
+      // Check if the response contains an error
+      if (analysisData.error) {
+        throw new Error(analysisData.error);
+      }
+      
       setAnalysis(analysisData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

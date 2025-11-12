@@ -94,21 +94,50 @@ Respond in JSON using this format:
 
 Make sure the JSON is clean and parseable.`;
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a witty but professional career coach. Keep copy punchy, straight-talk, and friendly. Use light humor (no sarcasm aimed at the user). Always respond with valid JSON only.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      max_tokens: 1000,
-      temperature: 0.7,
-    });
+    let completion;
+    try {
+      completion = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a witty but professional career coach. Keep copy punchy, straight-talk, and friendly. Use light humor (no sarcasm aimed at the user). Always respond with valid JSON only.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        max_tokens: 1000,
+        temperature: 0.7,
+      });
+    } catch (openaiError: unknown) {
+      // Handle OpenAI SDK errors specifically
+      // OpenAI SDK errors can be Error objects with additional properties
+      if (openaiError instanceof Error) {
+        // Check if it's an OpenAI API error with a code property
+        const errorWithCode = openaiError as Error & { code?: string; status?: number };
+        if (errorWithCode.code === 'invalid_api_key' || errorWithCode.message.includes('API key')) {
+          throw new Error('OpenAI API key is invalid or not configured');
+        }
+        if (errorWithCode.code === 'insufficient_quota' || errorWithCode.status === 429 || errorWithCode.message.includes('quota')) {
+          throw new Error('OpenAI API quota exceeded');
+        }
+        throw openaiError;
+      }
+      // Handle non-Error objects (shouldn't happen with OpenAI SDK, but just in case)
+      if (openaiError && typeof openaiError === 'object' && 'error' in openaiError) {
+        const errorObj = openaiError as { error?: { code?: string; message?: string; type?: string } };
+        if (errorObj.error?.code === 'invalid_api_key') {
+          throw new Error('OpenAI API key is invalid or not configured');
+        }
+        if (errorObj.error?.code === 'insufficient_quota') {
+          throw new Error('OpenAI API quota exceeded');
+        }
+        throw new Error(errorObj.error?.message || 'OpenAI API error');
+      }
+      throw openaiError;
+    }
 
     const response = completion.choices[0]?.message?.content;
     
@@ -145,8 +174,32 @@ Make sure the JSON is clean and parseable.`;
     return NextResponse.json(analysis);
   } catch (error) {
     console.error('Error analyzing job:', error);
+    
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      // Check for OpenAI API errors
+      if (error.message.includes('API key')) {
+        return NextResponse.json(
+          { error: 'OpenAI API key is invalid or not configured. Please check your environment variables.' },
+          { status: 500 }
+        );
+      }
+      if (error.message.includes('quota') || error.message.includes('429')) {
+        return NextResponse.json(
+          { error: 'OpenAI API quota exceeded. Please check your billing and usage limits.' },
+          { status: 500 }
+        );
+      }
+      if (error.message.includes('Invalid score')) {
+        return NextResponse.json(
+          { error: 'Invalid response format from AI. Please try again.' },
+          { status: 500 }
+        );
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to analyze job. Please try again.' },
+      { error: `Failed to analyze job: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     );
   }
